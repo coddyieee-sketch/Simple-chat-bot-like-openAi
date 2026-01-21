@@ -40,6 +40,7 @@ This project demonstrates how to integrate **Large Language Models (LLMs)** usin
 ---
 
 ## 📁 Project Structure
+```bash
 
 Simple-chat-bot-like-openAI/
 │
@@ -53,7 +54,7 @@ Simple-chat-bot-like-openAI/
 │ ├── app.js # Chat logic & API calls
 │
 └── README.md
-
+```
 
 ---
 
