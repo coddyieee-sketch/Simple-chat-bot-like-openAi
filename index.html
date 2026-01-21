@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Chat - Code & Image</title>
+  <meta name="color-scheme" content="dark light">
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'bg-dark': '#0b0f14',
+            'panel': '#121821',
+            'muted': '#94a3b8',
+            'accent': '#22d3ee'
+          },
+          boxShadow: {
+            'soft': '0 6px 30px rgba(0,0,0,0.25)'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- pdf.js (for PDF text extraction on client) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" integrity="sha512-tnJQ6bX8b0fI6qI8W2d9vL1e6yB/4v6l0wQ1r3sQd0Qb2Hq6s1b0Q6I8I8I8I8I8I8I8I8I8I8I8I8I8I8I8==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body class="bg-bg-dark text-slate-100 min-h-screen">
+  <div class="flex flex-col h-screen max-h-screen">
+    <!-- Header -->
+    <header class="border-b border-slate-800/60 bg-panel/60 backdrop-blur sticky top-0 z-20">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-lg bg-slate-800/70 grid place-items-center shadow-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" class="text-accent" fill="currentColor" aria-hidden="true">
+              <path d="M12 2a10 10 0 100 20 10 10 0 000-20Zm1 5v6l5 3-.75 1.23L11 13V7h2Z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg font-semibold tracking-tight">AI Chat</h1>
+            <p class="text-xs text-muted">Chat • Code </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="clearChatBtn" class="px-3 py-1.5 rounded-md text-sm bg-slate-800/70 hover:bg-slate-700/80 transition-colors">
+            Clear Chat
+          </button>
+          <a id="backendStatus" class="text-xs text-muted" href="#" title="Backend health" target="_blank"></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mode Tabs -->
+    <div class="border-b border-slate-800/60 bg-panel/40">
+      <div class="max-w-4xl mx-auto px-4 py-2 flex items-center gap-2">
+        <div class="inline-flex rounded-lg bg-slate-900/60 p-1">
+          <button data-mode="chat" class="mode-tab active">Chat</button>
+          <button data-mode="code" class="mode-tab">Code</button>
+        </div>
+        <div class="ml-auto text-xs text-muted hidden sm:block">
+          Tip: Enter to send • Shift+Enter for newline
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <main class="flex-1 overflow-hidden">
+      <div id="chatContainer" class="max-w-4xl mx-auto h-full overflow-y-auto px-4 py-4">
+        <div id="messages" class="flex flex-col gap-3 pb-20">
+          <!-- Messages will be rendered here -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Input -->
+    <footer class="border-t border-slate-800/60 bg-panel/60 backdrop-blur sticky bottom-0 z-20">
+      <div class="max-w-4xl mx-auto px-4 py-3">
+        <div class="flex items-end gap-2">
+          <div class="hidden md:flex items-center gap-2">
+            <input type="file" id="fileInput" multiple class="hidden" />
+            <button id="attachBtn" class="px-3 py-2 rounded-md bg-slate-800/70 hover:bg-slate-700/80 transition-colors" title="Attach files">
+              <svg width="18" height="18" viewBox="0 0 24 24" class="text-slate-200" fill="currentColor" aria-hidden="true"><path d="M16.5 6.5v9a4.5 4.5 0 11-9 0v-10a3 3 0 116 0v9a1.5 1.5 0 11-3 0v-8h-2v8a3.5 3.5 0 107 0v-9a5 5 0 10-10 0v10a6.5 6.5 0 1113 0v-9h-2z"/></svg>
+            </button>
+            <span id="attachHint" class="text-xs text-muted hidden">.txt, .py, .js, .java, .pdf, .md</span>
+          </div>
+
+          <div class="flex-1 relative">
+            <textarea id="promptInput" rows="1" placeholder="Ask anything... (Shift+Enter for newline)" class="w-full resize-none rounded-lg bg-slate-900/70 border border-slate-800/80 focus:border-slate-600 focus:ring-0 outline-none px-3 py-2 text-sm placeholder:text-slate-500"></textarea>
+            <div id="typingIndicator" class="absolute right-2 bottom-2 text-xs text-muted hidden">Thinking…</div>
+          </div>
+
+          <button id="sendBtn" class="px-4 py-2 rounded-md bg-accent/90 hover:bg-accent text-bg-dark font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            Send
+          </button>
+        </div>
+        <div id="fileChips" class="mt-2 flex flex-wrap gap-2"></div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toasts -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
